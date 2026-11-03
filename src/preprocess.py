@@ -1,9 +1,8 @@
 import pandas as pd
 
-
 # Process csv into dataframe
 def process_csv(filepath):
-    df = pd.read_csv("data/A2 Mortgage Credit Risk Dataset.csv")
+    df = pd.read_csv(filepath)
     return df
 
 # Remove unnesscery columns for ML

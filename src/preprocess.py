@@ -49,3 +49,22 @@ def replace_missing_values(df):
             replace_missing_values(df) # calls the function again as there should not be any missing data.
     else:
         return False 
+
+# prepares features and target
+def get_features_and_target(df, target):
+    X = df[[
+        "annual_income_gbp",
+        "loan_to_value_pct",
+        "debt_to_income_ratio",
+        "credit_score",
+        "employment_years",
+        "savings_gbp",
+        "missed_payments_24m",
+        "credit_utilisation_pct",
+        "previous_default_flag"
+        ]]
+    Y = df[target]
+    return X, Y
+
+X, Y = get_features_and_target(pd.read_csv("data/A2 Mortgage Credit Risk Dataset.csv"), "repayment_difficulty_12m")
+print(X)

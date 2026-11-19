@@ -13,7 +13,7 @@ def split_data(X, Y):
 
 # Scale numerical values
 def scale_data(X_train, X_test):
-    scaler = StandardScaler()
+    scaler = StandardScaler() # create an instance of the StandardScaler class to standardize features by removing the mean and scaling to unit variance
 
     X_train_scaled = scaler.fit_transform(X_train) # Should only learn average and ranges from training data only
 

@@ -12,6 +12,8 @@ def model_evaluation(model, X_test, Y_test): # Evaluate the performance of a tra
     """
     predictions = model.predict(X_test) # Make predictions on the test set
 
+    probabilities = model.predict_proba(X_test) # Get the predicted probabilities for each class
+
     accuracy = accuracy_score(Y_test, predictions) # Calculate accuracy of the model
 
     precisions = precision_score(Y_test, predictions) # Calculate precision of the model
@@ -24,6 +26,7 @@ def model_evaluation(model, X_test, Y_test): # Evaluate the performance of a tra
 
     return {
         "predictions": predictions,
+        "probabilities": probabilities,
         "accuracy" : accuracy,
         "precisions" : precisions,
         "recall": recall,

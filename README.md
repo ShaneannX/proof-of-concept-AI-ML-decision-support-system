@@ -92,7 +92,7 @@ Testing:
 Logical decision rules are tested using Python unit tests.
 Command to run unit test: pytest
 
-Technologies Used
+Technologies Used:
 Python
 Pandas
 NumPy

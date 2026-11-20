@@ -90,7 +90,7 @@ Loan-to-Value Ratio
 
 Testing:
 Logical decision rules are tested using Python unit tests.
-Command to run unit test: pytest
+Command to run unit test: python -m pytest
 
 Technologies Used:
 Python

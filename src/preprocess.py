@@ -41,7 +41,8 @@ def replace_missing_values(df):
     print(f"Missing columns list: {len(missing_columns_list)}")
     if len(missing_columns_list) > 0:
         for column in missing_columns_list:
-            df[column] = df[column].fillna(df[column].mean())
+            if df[column].dtype in ['float64', 'int64']: # Check if the column is numeric
+                df[column] = df[column].fillna(df[column].mean()) # Fill missing values with the mean of the column
 
     if check_missing_columns(df) is None:
         return df

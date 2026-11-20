@@ -24,7 +24,7 @@ def check_missing_columns(df):
     rows_with_missing_values = df[df.isnull().any(axis=1)]
     columns_with_missing_values = 0
     if len(rows_with_missing_values) > 0:
-        print(f'There are {len(rows_with_missing_values)} rows with missing values! Investigation needed!')
+        print(f'There are {len(rows_with_missing_values)} rows with missing values! Attempting to replace...')
         columns_with_missing_values = df.isnull().sum() # Shows columns and how many missing values
         # print(columns_with_missing_values) # for visuality
         columns_with_missing_values = columns_with_missing_values[columns_with_missing_values > 0] # filters to only show which columns have missing value for better readability
@@ -45,6 +45,7 @@ def replace_missing_values(df):
                 df[column] = df[column].fillna(df[column].mean()) # Fill missing values with the mean of the column
 
     if check_missing_columns(df) is None:
+        print("All missing values have been filled successfully.")
         return df
     else:
         raise ValueError("Failed to fill all missing values. Investigation needed!") # prevents the program from continuing if there are still missing values after the imputation process

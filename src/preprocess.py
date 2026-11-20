@@ -46,13 +46,13 @@ def replace_missing_values(df):
     if check_missing_columns(df) is None:
         return df
     else:
-        raise ValueError("Failed to fill all missing values. Investigation needed!") # calls the function again as there should not be any missing data.
+        raise ValueError("Failed to fill all missing values. Investigation needed!") # prevents the program from continuing if there are still missing values after the imputation process
 
 # prepares features and target
 def get_features_and_target(df, target, features=None):
     if features is None:
         X = df.drop(target, axis=1) # all the columns and values apart from the target
     else:
-        X = df[[col for col in features if col != target]]
+        X = df[[col for col in features if col != target]] # only the columns specified in the features list, excluding the target column
     Y = df[target]
     return X, Y

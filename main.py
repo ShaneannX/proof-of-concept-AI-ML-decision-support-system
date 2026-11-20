@@ -67,26 +67,12 @@ evaluation_results = model_evaluation(model, X_test_scaled, y_test)
 print(f"Evaluation results: accuracy={evaluation_results['accuracy']}, precision={evaluation_results['precisions']}, recall={evaluation_results['recall']}, f1={evaluation_results['f1']}, confusion_matrix={evaluation_results['matrix']}")
 results = {
     "application_id": [],
-    "risk_score_pct": [],
-    "risk_decision": [],
-    "credit_score": [],
-    "credit_score_decision": [],
-    "previous_default_flag": [],
-    "previous_default_flag_decision": [],
-    "debt_to_income_ratio": [],
-    "debt_to_income_decision": [],
-    "credit_utilisation_pct": [],
-    "credit_utilisation_decision": [],
-    "missed_payments_24m": [],
-    "missed_payment_decision": [],
-    "loan_to_value_pct": [],
-    "loan_to_value_decision": []
+    "recommendation": [],
+    "reasoning": [],
 }
-risks = []
 for i in range(len(X_test_scaled)):
     risk_score = model.predict_proba([X_test_scaled[i]])[0][1] # Get the risk score for the current test instance
     risk_score = round(risk_score * 100, 2) # Convert the risk score to a percentage
-    risks.append(risk_score)
     credit_score = round(X_test.iloc[i]['credit_score']) # Get the credit score for the current test instance
     default_flag = X_test.iloc[i]['previous_default_flag'] # Get the previous default flag for the current test instance
     debt_to_income = round(X_test.iloc[i]['debt_to_income_ratio'], 2) # Get the debt-to-income ratio for the current test instance
@@ -94,29 +80,21 @@ for i in range(len(X_test_scaled)):
     missed_payments = X_test.iloc[i]['missed_payments_24m'] # Get the missed payments in the last 24 months for the current test instance
     loan_to_value = X_test.iloc[i]['loan_to_value_pct'] # Get the loan-to-value ratio for the current test instance
 
-    risk_decision_result = risk_decision(risk_score)
-    credit_score_decision_result = credit_score_decision(credit_score)
-    previous_default_flag_decision_result = previous_default_flag_decision(default_flag)
-    debt_to_income_decision_result = debt_to_income_decision(debt_to_income)
-    credit_utilisation_decision_result = credit_utilisation_decision(credit_util)
-    missed_payment_decision_result = missed_payment_decision(missed_payments)
-    loan_to_value_decision_result = load_to_value_decision(loan_to_value)
-    
+    risk_decision_result = risk_classification(risk_score)
+    credit_score_decision_result = credit_score_classification(credit_score)
+    previous_default_flag_decision_result = previous_default_flag_classification(default_flag)
+    debt_to_income_decision_result = debt_to_income_classification(debt_to_income)
+    credit_utilisation_decision_result = credit_utilisation_classification(credit_util)
+    missed_payment_decision_result = missed_payment_classification(missed_payments)
+    loan_to_value_decision_result = load_to_value_classification(loan_to_value)
+
+    recommendation_result = recommendation(risk_decision_result)
+    reasoning_result = reasoning(risk_decision_result, credit_score_decision_result, previous_default_flag_decision_result, debt_to_income_decision_result, credit_utilisation_decision_result, missed_payment_decision_result, loan_to_value_decision_result)
+    reasoning_text ="\n".join(reasoning_result)
+
     results["application_id"].append(application_id.iloc[i])
-    results["risk_score_pct"].append(risk_score)
-    results["risk_decision"].append(risk_decision_result)
-    results["credit_score"].append(credit_score)
-    results["credit_score_decision"].append(credit_score_decision_result)
-    results["previous_default_flag"].append(default_flag)
-    results["previous_default_flag_decision"].append(previous_default_flag_decision_result)
-    results["debt_to_income_ratio"].append(debt_to_income)
-    results["debt_to_income_decision"].append(debt_to_income_decision_result)
-    results["credit_utilisation_pct"].append(credit_util)
-    results["credit_utilisation_decision"].append(credit_utilisation_decision_result)
-    results["missed_payments_24m"].append(missed_payments)
-    results["missed_payment_decision"].append(missed_payment_decision_result)
-    results["loan_to_value_pct"].append(loan_to_value)
-    results["loan_to_value_decision"].append(loan_to_value_decision_result)
+    results["recommendation"].append(recommendation_result)
+    results["reasoning"].append(reasoning_text)
 
 # Below are some commented-out print statements that can be used for debugging or analysis purposes. They provide insights into the risk scores and other relevant metrics.
 # print(f"Minimum Risk Score: {min(risks)}")

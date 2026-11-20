@@ -5,7 +5,7 @@ from src.decision_rules import *
 from src.feature_engineering import *
 import pandas as pd
 
-### Preprocess the data
+### Data preparation
 df = process_csv('data/A2 Mortgage Credit Risk Dataset.csv')
 
 application_id = df['application_id'].copy() # copy application_id column to use for later reference
@@ -18,6 +18,7 @@ df = replace_missing_values(df)
 
 # features = feature_correlation(df) # Visualize the correlation between features
 
+# Feature and Target selection
 features = [ # List of features in order of importance based on feature importance analysis
     "credit_score",
     "missed_payments_24m",
@@ -49,22 +50,24 @@ features = None
 
 X, y = get_features_and_target(df, 'repayment_difficulty_12m', features=final_features) # Get features and target for model training
 
-## Train the model
+## Preprocessing
 
 X_train, X_test, y_train, y_test = split_data(X,y)
 
 X_train_scaled, X_test_scaled = scale_data(X_train, X_test)
 
+# Train the model
 model = train_model(X_train_scaled, y_train)
 
 
 
 # importance_df = feature_importance(X, model) # Visualize the importance of features
 
-
+# Evaluate the model
 evaluation_results = model_evaluation(model, X_test_scaled, y_test)
 
 print(f"Evaluation results: accuracy={evaluation_results['accuracy']}, precision={evaluation_results['precisions']}, recall={evaluation_results['recall']}, f1={evaluation_results['f1']}, confusion_matrix={evaluation_results['matrix']}")
+# Generate recommendations and reasoning for each test instance
 results = {
     "application_id": [],
     "recommendation": [],
@@ -105,5 +108,8 @@ for i in range(len(X_test_scaled)):
 # print(df["debt_to_income_ratio"].describe())
 # print(df["credit_utilisation_pct"].describe())
 # print(df['credit_score'].mean())
+
+# Generate CSV file with application_id, recommendation, and reasoning for each test instance
+
 df_results = pd.DataFrame(results) # Create a DataFrame from the results dictionary to store the evaluation results and decisions for each application
 df_results.to_csv('data/results.csv', index=False) # Save the results DataFrame to a CSV file for further analysis or reporting
